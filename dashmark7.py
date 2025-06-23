@@ -18,9 +18,11 @@ os.makedirs(CREDENTIALS_DIR, exist_ok=True)
 # --------- AUTH ---------
 def authenticate_and_store(account_label):
     flow = InstalledAppFlow.from_client_secrets_file("client_secrets.json", SCOPES)
+    
+    # Generate the URL for manual authentication
     auth_url, _ = flow.authorization_url(prompt='consent')
-
     st.markdown(f"[🔐 Click here to authenticate your YouTube account]({auth_url})")
+    
     code = st.text_input("📋 Paste the authorization code here:")
 
     if code:
@@ -30,7 +32,8 @@ def authenticate_and_store(account_label):
             pickle.dump(credentials, f)
         st.success("✅ Authentication complete. Refresh the page to see the account.")
         st.stop()
-    return None  # prevent further execution until user authenticates
+    
+    return None
 
 def load_credentials(account_label):
     with open(f"{CREDENTIALS_DIR}/{account_label}.pkl", "rb") as f:
